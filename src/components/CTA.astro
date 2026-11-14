@@ -1,0 +1,37 @@
+---
+import { company } from '../data/company';
+import Icon from './Icon.astro';
+
+interface Props {
+  heading?: string;
+  text?: string;
+  button?: string;
+  href?: string;
+}
+const {
+  heading = 'Have a project to discuss?',
+  text = 'Tell us what you need built, where, and by when. We will come back to you with the next steps towards a quotation.',
+  button = 'Request a quotation',
+  href = '/contact/#quote',
+} = Astro.props;
+const phone = company.phones[0];
+---
+
+<section class="cta" aria-labelledby="cta-heading">
+  <div class="wrap">
+    <div>
+      <h2 id="cta-heading">{heading}</h2>
+      <p>{text}</p>
+    </div>
+    <div class="cta__actions">
+      <a class="btn btn--navy" href={href}>
+        {button}
+        <Icon name="arrow" />
+      </a>
+      <a class="btn btn--outline" href={`tel:${phone.tel}`}>
+        <Icon name="phone" />
+        {phone.display}
+      </a>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,56 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { company } from '../data/company';
+---
+
+<Base title="Privacy Notice" description={`How ${company.name} handles information submitted through this website.`}>
+  <PageHero label="Privacy" title="Privacy notice." crumbs={[{ label: 'Privacy' }]} />
+
+  <section class="section">
+    <div class="wrap prose" style="max-width:52rem">
+      <h2>Information you send us</h2>
+      <p>
+        When you submit the quotation request form we receive the details you enter: your name, organisation,
+        telephone number, email address, the project type, location and description, and any document you attach. We
+        use this information only to assess and respond to your enquiry and, if you proceed, to prepare a quotation.
+      </p>
+      <p>
+        We do not sell your information or share it with third parties for marketing. It is seen only by the people
+        at {company.name} who deal with enquiries, and by the service providers that host this website and deliver
+        form submissions to us.
+      </p>
+
+      <h3>Cookies and tracking</h3>
+      <p>
+        This website does not set advertising or analytics cookies and does not track you across other sites. Fonts and
+        images are served from the website itself rather than from third-party services.
+      </p>
+
+      <h3>Website hosting</h3>
+      <p>
+        The website is hosted by Netlify, which processes form submissions on our behalf and, like any web host,
+        keeps standard server logs (such as IP address and browser type) for security and reliability.
+      </p>
+
+      <h3>External links</h3>
+      <p>
+        Project entries link to the public sources they are drawn from. Those websites are operated by others and
+        have their own privacy practices.
+      </p>
+
+      <h3>Your requests</h3>
+      <p>
+        To ask what information we hold about you, or to have it corrected or deleted, email
+        <a href={`mailto:${company.email}`}>{company.email}</a> or call <a href={`tel:${company.phones[0].tel}`}>{company.phones[0].display}</a>.
+      </p>
+
+      <h3>Imagery</h3>
+      <p>
+        Unless an image is captioned as a photograph of a named project, the scene imagery on this website is
+        illustrative and was produced for promotional purposes. It does not depict specific projects, sites, staff or
+        equipment of the company.
+      </p>
+    </div>
+  </section>
+</Base>

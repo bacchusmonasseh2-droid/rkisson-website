@@ -1,0 +1,106 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import CTA from '../components/CTA.astro';
+import { categoryLabels, sortedProjects, statusLabels, statusNotes, type ProjectStatus } from '../data/projects';
+import type { ProjectCategory } from '../data/services';
+
+const categories = Object.keys(categoryLabels) as ProjectCategory[];
+const count = (c: ProjectCategory) => sortedProjects.filter((p) => p.categories.includes(c)).length;
+const statuses: ProjectStatus[] = ['completed', 'in-progress', 'awarded'];
+---
+
+<Base
+  title="Projects"
+  description="Documented projects and contract awards of R. Kissoon Contracting Service: water systems, wells, housing infrastructure, bridges and buildings in Guyana."
+>
+  <PageHero
+    label="Projects"
+    title="Documented projects and contract awards."
+    lead="Every entry is drawn from a public source and labelled with what that source establishes."
+    image="bridge"
+    crumbs={[{ label: 'Projects' }]}
+  />
+
+  <section class="section section--concrete">
+    <div class="wrap">
+      <div class="legend" data-reveal>
+        {
+          statuses.map((s) => (
+            <div>
+              <span class={`status status--${s}`}>{statusLabels[s]}</span>
+              <span>{statusNotes[s]}</span>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="filters" role="group" aria-label="Filter projects by category">
+        <button class="filter" type="button" data-filter="all" aria-pressed="true">
+          All projects<span class="filter__count">{sortedProjects.length}</span>
+        </button>
+        {
+          categories.map((c) => (
+            <button class="filter" type="button" data-filter={c} aria-pressed="false">
+              {categoryLabels[c]}
+              <span class="filter__count">{count(c)}</span>
+            </button>
+          ))
+        }
+      </div>
+      <p class="filter-status" aria-live="polite" id="filter-status">Showing {sortedProjects.length} of {sortedProjects.length} entries</p>
+
+      <div class="project-grid" id="project-grid">
+        {sortedProjects.map((p) => <ProjectCard project={p} />)}
+      </div>
+
+      <div class="empty-note" id="empty-note" hidden>
+        <p>
+          No project records have been published in this category yet. Please <a href="/contact/#quote">contact us</a>
+          to discuss relevant experience for your project.
+        </p>
+      </div>
+
+      <p class="footnote" style="margin-top:2.5rem;max-width:60rem">
+        This portfolio lists only work that could be traced to a public source at the time of writing and is not a
+        complete record of the company’s projects. Where completion has not been confirmed from a public source the
+        entry is shown as a contract award. Photographs will be added as genuine project images are supplied.
+      </p>
+    </div>
+  </section>
+
+  <CTA heading="Planning something similar?" />
+
+  <script>
+    const buttons = document.querySelectorAll<HTMLButtonElement>('.filter');
+    const cards = document.querySelectorAll<HTMLElement>('#project-grid .project-card');
+    const status = document.getElementById('filter-status');
+    const empty = document.getElementById('empty-note');
+
+    function apply(filter: string) {
+      let shown = 0;
+      cards.forEach((card) => {
+        const match = filter === 'all' || (card.dataset.categories ?? '').split(' ').includes(filter);
+        card.hidden = !match;
+        if (match) shown += 1;
+      });
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.filter === filter)));
+      if (status) status.textContent = `Showing ${shown} of ${cards.length} entries`;
+      if (empty) empty.hidden = shown > 0;
+    }
+
+    buttons.forEach((b) =>
+      b.addEventListener('click', () => {
+        const filter = b.dataset.filter ?? 'all';
+        apply(filter);
+        const url = new URL(window.location.href);
+        filter === 'all' ? url.searchParams.delete('category') : url.searchParams.set('category', filter);
+        history.replaceState(null, '', url);
+      }),
+    );
+
+    const initial = new URLSearchParams(window.location.search).get('category');
+    if (initial && [...buttons].some((b) => b.dataset.filter === initial)) apply(initial);
+  </script>
+</Base>

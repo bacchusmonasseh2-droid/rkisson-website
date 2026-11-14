@@ -1,0 +1,219 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Picture from '../components/Picture.astro';
+import Icon from '../components/Icon.astro';
+import CTA from '../components/CTA.astro';
+import { company } from '../data/company';
+import { services } from '../data/services';
+---
+
+<Base
+  title="About Us"
+  description="About R. Kissoon Contracting Service: a Guyanese contractor for water infrastructure, civil works and building construction, based on the East Coast of Demerara."
+>
+  <PageHero
+    label="About us"
+    title="A contractor built on work that has to last."
+    lead="We construct water systems, roads, drainage and buildings for public agencies, community programmes and private clients in Guyana."
+    image="about-drawings"
+    crumbs={[{ label: 'About' }]}
+  />
+
+  <section class="section">
+    <div class="wrap grid-2 grid-2--wide-left">
+      <div class="prose" data-reveal>
+        <p class="label">Company overview</p>
+        <h2>Who we are</h2>
+        <p class="lead">
+          {company.name} is a Guyanese construction and civil works contractor with its office at Foulis Housing
+          Scheme on the East Coast of Demerara.
+        </p>
+        <p>
+          Our principal field is water infrastructure. We drill and develop potable water wells, install transmission
+          and distribution mains, and build complete community supply systems with pumping, elevated storage and
+          household service connections. Alongside this we construct roads and all-weather roads, drainage structures,
+          culverts and concrete bridges, erect and rehabilitate buildings, undertake sea defence and drainage and
+          irrigation works, and rent construction equipment.
+        </p>
+        <p>
+          Our clients are mainly public bodies: the national water utility, government ministries and agencies, the
+          housing authority and donor-supported community programmes. We bring the same approach to work for private
+          developers, institutions and landowners.
+        </p>
+      </div>
+      <figure class="frame" data-reveal style="--delay:.12s">
+        <Picture
+          name="water-mains"
+          alt="Illustrative image of blue water pipes laid in a trench beside a rural road"
+          sizes="(min-width: 900px) 40vw, 100vw"
+        />
+        <figcaption>Illustrative image — laying a water transmission main.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section section--concrete">
+    <div class="wrap grid-2 grid-2--wide-right">
+      <div data-reveal>
+        <p class="label">Business background</p>
+        <h2>Where our work has been.</h2>
+      </div>
+      <div class="prose" data-reveal style="--delay:.1s">
+        <p>
+          Public records show the company carrying out government contracts since at least 2016, when Guyana Water
+          Inc. awarded it the installation of a water transmission and distribution network at Kuru Kuru and Kuru
+          Kururu on the Soesdyke–Linden Highway.
+        </p>
+        <p>
+          Since then the larger part of our documented work has been in the hinterland. Water supply systems we built
+          for Guyana Water Inc. have been reported as commissioned at Kamarang and Jawalla in Region 7 and at Taruka,
+          Monkey Mountain, Kamana and Sand Hill in Region 8. In several of these villages it was the first potable
+          water system the community had.
+        </p>
+        <p>
+          Our work has also included building contracts for government agencies at Lethem and Mazaruni, and, from
+          2023, the roads, drainage and pipe networks for a Central Housing and Planning Authority housing scheme at
+          Lethem in Region 9. More recent awards include well drilling programmes in Regions 3 and 7 and water systems
+          funded through the Basic Needs Trust Fund.
+        </p>
+        <p>
+          <a class="text-link" href="/projects/">
+            See the documented portfolio
+            <Icon name="arrow" />
+          </a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="spec-heading">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="label">Areas of specialisation</p>
+        <h2 id="spec-heading">What we do.</h2>
+      </div>
+      <div class="other-services" data-reveal>
+        {
+          services.map((s) => (
+            <a href={s.slug === 'equipment-rental' ? '/equipment-rental/' : `/services/${s.slug}/`}>
+              <span>{s.number}</span>
+              {s.title}
+              <Icon name="arrow" />
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--navy" aria-labelledby="values-heading">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="label">Our values</p>
+        <h2 id="values-heading">Building With Integrity.</h2>
+        <p class="lead">Our slogan is a working rule. This is what it means in practice.</p>
+      </div>
+      <div class="principles">
+        <div class="principle" data-reveal>
+          <span class="principle__no">01</span>
+          <h3>Integrity</h3>
+          <p>We price work honestly, build what the contract specifies and do not substitute or cut corners.</p>
+        </div>
+        <div class="principle" data-reveal>
+          <span class="principle__no">02</span>
+          <h3>Quality</h3>
+          <p>
+            Infrastructure is judged over years of use. We build to the drawings and specifications and correct what
+            does not meet them.
+          </p>
+        </div>
+        <div class="principle" data-reveal>
+          <span class="principle__no">03</span>
+          <h3>Safety</h3>
+          <p>
+            Drilling, excavation and work with heavy plant carry real risk. We expect our crews to go home safely and
+            to leave the communities we work in safe.
+          </p>
+        </div>
+        <div class="principle" data-reveal>
+          <span class="principle__no">04</span>
+          <h3>Respect for communities</h3>
+          <p>
+            Much of our work is inside villages. We work with village leadership and remember that the people around
+            the site are the people the project is for.
+          </p>
+        </div>
+        <div class="principle" data-reveal>
+          <span class="principle__no">05</span>
+          <h3>Accountability</h3>
+          <p>We tell clients where a project stands, including when there is a problem to solve.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--concrete" aria-labelledby="delivery-heading">
+    <div class="wrap">
+      <div class="section-head section-head--split" data-reveal>
+        <div>
+          <p class="label">Project delivery</p>
+          <h2 id="delivery-heading">How we approach a project.</h2>
+        </div>
+        <p>The steps are the same whether the job is a single well or the infrastructure for a housing scheme.</p>
+      </div>
+      <div class="steps" style="grid-template-columns:repeat(auto-fit,minmax(15rem,1fr))">
+        <div class="step" data-reveal>
+          <h3>Understand the requirement</h3>
+          <p>We review the drawings, specifications and site conditions, and visit the site where that is practical.</p>
+        </div>
+        <div class="step" data-reveal>
+          <h3>Price and plan</h3>
+          <p>
+            We prepare a priced offer and a programme that accounts for access, season, materials supply and plant.
+          </p>
+        </div>
+        <div class="step" data-reveal>
+          <h3>Mobilise</h3>
+          <p>We move crews, equipment and materials to site and agree working arrangements with the client and community.</p>
+        </div>
+        <div class="step" data-reveal>
+          <h3>Construct</h3>
+          <p>We build to the specification under the supervision arrangements the contract provides for.</p>
+        </div>
+        <div class="step" data-reveal>
+          <h3>Test and hand over</h3>
+          <p>We test what we have built, attend to defects and hand over a working asset.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap grid-2">
+      <figure class="frame" data-reveal>
+        <Picture
+          name="building"
+          alt="Illustrative image of a two-storey concrete building under construction"
+          sizes="(min-width: 900px) 45vw, 100vw"
+        />
+        <figcaption>Illustrative image.</figcaption>
+      </figure>
+      <div class="prose" data-reveal style="--delay:.1s">
+        <p class="label">Our commitment</p>
+        <h2>Quality and professional service.</h2>
+        <p>
+          A water system that fails after a year, or a road that washes out in its first rainy season, is worse than
+          no project at all, because the opportunity to build it properly has been spent. We hold ourselves to the
+          standard of infrastructure that is still working long after handover.
+        </p>
+        <p>
+          For our clients that means clear communication, work that follows the contract, and a contractor who can be
+          reached. If you are considering us for a project, we are glad to talk through the work with you.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <CTA />
+</Base>

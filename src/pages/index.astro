@@ -1,0 +1,274 @@
+---
+import Base from '../layouts/Base.astro';
+import Picture from '../components/Picture.astro';
+import Icon from '../components/Icon.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import CTA from '../components/CTA.astro';
+import { company } from '../data/company';
+import { services } from '../data/services';
+import { featuredProjects, projects } from '../data/projects';
+
+const regions = new Set(projects.map((p) => p.region).filter((r) => /^Region/.test(r)));
+const firstYear = Math.min(...projects.map((p) => Number(p.sort.slice(0, 4))));
+const completedCommunities = ['Kamarang', 'Jawalla', 'Taruka', 'Monkey Mountain', 'Kamana', 'Sand Hill'];
+const featured = featuredProjects.slice(0, 3);
+---
+
+<Base
+  title={`${company.name} | Contractor in Guyana`}
+  description="Guyanese contractor for water wells and supply systems, roads, drainage, bridges, buildings, sea defence and equipment rental. Building With Integrity."
+>
+  <section class="hero">
+    <div class="hero__media">
+      <Picture
+        name="hero-home"
+        alt=""
+        sizes="100vw"
+        widths={[640, 1024, 1600, 2048]}
+        loading="eager"
+      />
+    </div>
+    <div class="wrap hero__body">
+      <p class="label hero__eyebrow">{company.name} · Guyana</p>
+      <h1>Building with <em>integrity.</em></h1>
+      <p class="hero__lead">
+        We build the water systems, roads, drainage, bridges and buildings that communities across Guyana depend on,
+        from the coast to the hinterland.
+      </p>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="/contact/#quote">
+          Request a project quotation
+          <Icon name="arrow" />
+        </a>
+        <a class="btn btn--ghost" href="/projects/">View documented projects</a>
+      </div>
+    </div>
+    <div class="titleblock">
+      <div class="wrap">
+        <nav class="titleblock__grid" aria-label="Service areas">
+          {
+            services.map((s) => (
+              <a class="titleblock__cell" href={s.slug === 'equipment-rental' ? '/equipment-rental/' : `/services/${s.slug}/`}>
+                <span class="titleblock__no">{s.number}</span>
+                <span class="titleblock__name">{s.navTitle}</span>
+              </a>
+            ))
+          }
+        </nav>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap grid-2 grid-2--wide-left">
+      <div data-reveal>
+        <p class="label">Who we are</p>
+        <h2>A Guyanese contractor for essential infrastructure.</h2>
+        <p class="lead" style="margin-top:1.5rem">
+          {company.name} is a construction and civil works contractor based at Foulis on the East Coast of Demerara.
+          Our work is the infrastructure that daily life rests on: a well and a pipe network that bring clean water to
+          a village, the roads and drains that open up a housing scheme, a building a public agency can operate from.
+        </p>
+        <p>
+          We carry out contracts for the national water utility, government agencies and community development
+          programmes, and we welcome enquiries from private developers and institutions. A large share of our work is
+          in hinterland regions, where getting people, plant and materials to site is part of the engineering.
+        </p>
+        <p style="margin-top:2rem">
+          <a class="text-link" href="/about/">
+            About the company
+            <Icon name="arrow" />
+          </a>
+        </p>
+      </div>
+      <figure class="frame" data-reveal style="--delay:.12s;--ratio:4/5">
+        <Picture
+          name="water-trestle"
+          alt="Illustrative image of a village water system: an elevated tank trestle and a solar array beside a well head"
+          sizes="(min-width: 900px) 40vw, 100vw"
+        />
+        <figcaption>Illustrative image — elevated storage and solar pumping of the kind used in village water systems.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section section--concrete" aria-labelledby="services-heading">
+    <div class="wrap">
+      <div class="section-head section-head--split" data-reveal>
+        <div>
+          <p class="label">What we build</p>
+          <h2 id="services-heading">Six service areas, one contractor.</h2>
+        </div>
+        <p>
+          Water, roads, drainage and buildings are usually needed together. We take on each as a stand-alone contract
+          or combine them where a site calls for it.
+        </p>
+      </div>
+      <div class="service-grid">
+        {services.map((s, i) => <ServiceCard service={s} delay={(i % 3) * 0.08} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="record-heading">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="label">On the public record</p>
+        <h2 id="record-heading">Work you can verify.</h2>
+        <p class="lead">
+          The figures below are drawn from government releases, news reports and procurement records, not from our own
+          marketing. Each project in our portfolio links to its source.
+        </p>
+      </div>
+      <div class="facts" data-reveal>
+        <div class="fact">
+          <div class="fact__value">{completedCommunities.length}</div>
+          <div class="fact__label">hinterland communities with water systems reported as commissioned</div>
+        </div>
+        <div class="fact">
+          <div class="fact__value">{projects.length}</div>
+          <div class="fact__label">projects and contract awards documented in public sources</div>
+        </div>
+        <div class="fact">
+          <div class="fact__value">{regions.size}</div>
+          <div class="fact__label">administrative regions of Guyana where that work is located</div>
+        </div>
+        <div class="fact">
+          <div class="fact__value">{firstYear}</div>
+          <div class="fact__label">year of the earliest contract award found on public record</div>
+        </div>
+      </div>
+      <p class="footnote">
+        Commissioned systems: {completedCommunities.join(', ')}. Counts reflect public sources reviewed in November 2026
+        and are not a complete list of the company’s work.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--concrete" aria-labelledby="projects-heading">
+    <div class="wrap">
+      <div class="section-head section-head--split" data-reveal>
+        <div>
+          <p class="label">Featured projects</p>
+          <h2 id="projects-heading">Documented projects.</h2>
+        </div>
+        <p>
+          Each entry states plainly whether the work has been reported as completed, was in progress when last reported,
+          or is a contract award whose completion we have yet to confirm here.
+        </p>
+      </div>
+      <div class="project-grid">
+        {featured.map((p) => <div data-reveal><ProjectCard project={p} compact /></div>)}
+      </div>
+      <p style="margin-top:2.5rem">
+        <a class="btn btn--outline" href="/projects/">
+          View the full portfolio
+          <Icon name="arrow" />
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--navy" aria-labelledby="why-heading">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="label">Why consider us</p>
+        <h2 id="why-heading">What clients can expect.</h2>
+      </div>
+      <div class="principles">
+        <div class="principle" data-reveal>
+          <span class="principle__no">01</span>
+          <h3>A record in the public domain</h3>
+          <p>
+            Our water supply work for national programmes has been reported at commissioning by government and the
+            press. You can read about it before you call us.
+          </p>
+        </div>
+        <div class="principle" data-reveal>
+          <span class="principle__no">02</span>
+          <h3>Accustomed to remote sites</h3>
+          <p>
+            Much of our documented work is in Regions 7, 8 and 9. We plan for river and trail access, seasonal
+            windows and long supply lines as a matter of course.
+          </p>
+        </div>
+        <div class="principle" data-reveal>
+          <span class="principle__no">03</span>
+          <h3>Complete systems, not parts</h3>
+          <p>
+            A water project from us covers the well, pumping, storage, pipe network and service connections. A housing
+            scheme covers roads, drains and pipe networks together.
+          </p>
+        </div>
+        <div class="principle" data-reveal>
+          <span class="principle__no">04</span>
+          <h3>Familiar with public procurement</h3>
+          <p>
+            We tender regularly for national competitive bids and work to the specifications, supervision and
+            reporting those contracts require.
+          </p>
+        </div>
+        <div class="principle" data-reveal>
+          <span class="principle__no">05</span>
+          <h3>Integrity as the standard</h3>
+          <p>
+            “Building With Integrity” is our commitment to price work honestly, build to the specification and say
+            plainly where a project stands.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="contact-heading">
+    <div class="wrap grid-2 grid-2--wide-right">
+      <figure class="frame" data-reveal>
+        <Picture
+          name="contact-survey"
+          alt="Illustrative image of a surveying instrument set up on a graded construction site at dawn"
+          sizes="(min-width: 900px) 40vw, 100vw"
+        />
+        <figcaption>Illustrative image.</figcaption>
+      </figure>
+      <div data-reveal style="--delay:.1s">
+        <p class="label">Get in touch</p>
+        <h2 id="contact-heading">Talk to us about your project.</h2>
+        <dl class="contact-list" style="margin:2rem 0 0">
+          <div>
+            <dt>Office</dt>
+            <dd>
+              {company.address.line1}, {company.address.line2},<br />
+              {company.address.region}, {company.address.country}
+            </dd>
+          </div>
+          <div>
+            <dt>Telephone</dt>
+            <dd>
+              {
+                company.phones.map((p, i) => (
+                  <>
+                    {i > 0 && <br />}
+                    <a href={`tel:${p.tel}`}>{p.display}</a>
+                  </>
+                ))
+              }
+            </dd>
+          </div>
+          <div>
+            <dt>Email</dt>
+            <dd><a href={`mailto:${company.email}`}>{company.email}</a></dd>
+          </div>
+        </dl>
+        <p style="margin-top:2rem">
+          <a class="btn btn--navy" href="/contact/#quote">
+            Request a quotation
+            <Icon name="arrow" />
+          </a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <CTA />
+</Base>

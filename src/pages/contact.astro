@@ -1,0 +1,127 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import QuoteForm from '../components/QuoteForm.astro';
+import Icon from '../components/Icon.astro';
+import { company } from '../data/company';
+
+const mapsSearch = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+  `${company.address.line2}, ${company.address.region}, ${company.address.country}`,
+)}`;
+---
+
+<Base
+  title="Contact & Request a Quotation"
+  description="Contact R. Kissoon Contracting Service at Foulis, East Coast Demerara, or request a quotation for water, civil, building, coastal or drainage works in Guyana."
+>
+  <PageHero
+    label="Contact"
+    title="Request a quotation."
+    lead="Send us the details of your project and we will respond with the next steps. You can also reach the office by telephone or email."
+    image="contact-survey"
+    crumbs={[{ label: 'Contact' }]}
+  />
+
+  <section class="section section--concrete">
+    <div class="wrap grid-2 grid-2--wide-right">
+      <div data-reveal>
+        <p class="label">Office</p>
+        <h2 style="font-size:clamp(1.6rem,2.6vw,2.2rem)">{company.name}</h2>
+        <dl class="contact-list" style="margin:2rem 0 0">
+          <div>
+            <dt>Address</dt>
+            <dd>
+              {company.address.line1}<br />
+              {company.address.line2}<br />
+              {company.address.region}, {company.address.country}
+            </dd>
+          </div>
+          <div>
+            <dt>Telephone</dt>
+            <dd>
+              {
+                company.phones.map((p, i) => (
+                  <>
+                    {i > 0 && <br />}
+                    <a href={`tel:${p.tel}`}>{p.display}</a>
+                  </>
+                ))
+              }
+            </dd>
+          </div>
+          <div>
+            <dt>Email</dt>
+            <dd><a href={`mailto:${company.email}`}>{company.email}</a></dd>
+          </div>
+          {
+            company.whatsapp && (
+              <div>
+                <dt>WhatsApp</dt>
+                <dd>
+                  <a href={`https://wa.me/${company.whatsapp}`} rel="noopener">
+                    Message us on WhatsApp
+                  </a>
+                </dd>
+              </div>
+            )
+          }
+        </dl>
+        {
+          !company.mapEmbedUrl && (
+            <p style="margin-top:1.75rem">
+              <a class="text-link" href={mapsSearch} rel="noopener" target="_blank">
+                Find Foulis on Google Maps
+                <Icon name="arrow" />
+                <span class="sr-only">(opens in a new tab)</span>
+              </a>
+            </p>
+          )
+        }
+      </div>
+
+      <div id="quote" data-reveal style="--delay:.1s">
+        <p class="label">Project quotation request</p>
+        <h2 style="font-size:clamp(1.6rem,2.6vw,2.2rem);margin-bottom:1.75rem">Tell us about the work.</h2>
+        <QuoteForm />
+      </div>
+    </div>
+  </section>
+
+  {
+    company.mapEmbedUrl && (
+      <section aria-label="Map">
+        <iframe
+          class="map"
+          src={company.mapEmbedUrl}
+          title={`Map showing the location of ${company.name}`}
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+        />
+      </section>
+    )
+  }
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="label">Helpful to include</p>
+        <h2>What speeds up a quotation.</h2>
+      </div>
+      <div class="steps">
+        <div class="step" data-reveal>
+          <h3>Location and access</h3>
+          <p>The village or site, the region, and how it is reached: road, river, trail or airstrip.</p>
+        </div>
+        <div class="step" data-reveal style="--delay:.08s">
+          <h3>Scope and documents</h3>
+          <p>Drawings, a bill of quantities or tender documents if you have them. A clear description if you do not.</p>
+        </div>
+        <div class="step" data-reveal style="--delay:.16s">
+          <h3>Timeline</h3>
+          <p>When you need the work to start and finish, and any submission deadline we should know about.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

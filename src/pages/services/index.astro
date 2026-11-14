@@ -1,0 +1,58 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import CTA from '../../components/CTA.astro';
+import { services } from '../../data/services';
+---
+
+<Base
+  title="Services"
+  description="Water infrastructure, civil works, building construction, sea defence, drainage and irrigation, and equipment rental from R. Kissoon Contracting Service."
+>
+  <PageHero
+    label="Services"
+    title="Construction and infrastructure services."
+    lead="From a single production well to the roads, drains and pipe networks of a new housing scheme."
+    image="road-hinterland"
+    crumbs={[{ label: 'Services' }]}
+  />
+
+  <section class="section section--concrete">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="label">Service areas</p>
+        <h2>Choose a service to see what it covers.</h2>
+        <p>
+          Each page sets out what the work involves, who typically needs it, the problems it solves and how to start an
+          enquiry.
+        </p>
+      </div>
+      <div class="service-grid">
+        {services.map((s, i) => <ServiceCard service={s} delay={(i % 3) * 0.08} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap grid-2">
+      <div data-reveal>
+        <p class="label">Combined works</p>
+        <h2>Projects rarely fit in one category.</h2>
+      </div>
+      <div class="prose" data-reveal style="--delay:.1s">
+        <p>
+          A new public building in the interior may need an access road, a culvert and its own well. A housing scheme
+          needs roads, drains and water mains built in the right order. Because we carry out all of these, we can
+          price and programme them as one job.
+        </p>
+        <p>
+          If your project spans several of the services listed here, describe the whole scope in your enquiry and we
+          will respond on that basis.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <CTA />
+</Base>

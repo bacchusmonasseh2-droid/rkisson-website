@@ -1,0 +1,216 @@
+---
+/**
+ * Quotation request form.
+ *
+ * Works out of the box on Netlify (Netlify Forms): the `data-netlify`
+ * attribute registers the form at deploy time, submissions (including the
+ * optional attachment) appear in the Netlify dashboard and can be forwarded
+ * by email. See README → "Form handling" for setup and for alternatives.
+ *
+ * Spam protection: honeypot field (`netlify-honeypot`). No cookies are set.
+ */
+import { company } from '../data/company';
+import { services } from '../data/services';
+import Icon from './Icon.astro';
+
+const projectTypes = [...services.map((s) => ({ value: s.slug, label: s.title })), { value: 'other', label: 'Other / not sure' }];
+---
+
+<form
+  class="form"
+  id="quote-form"
+  name="quotation-request"
+  method="POST"
+  action="/thank-you/"
+  enctype="multipart/form-data"
+  data-netlify="true"
+  netlify-honeypot="website-url"
+  novalidate
+>
+  <input type="hidden" name="form-name" value="quotation-request" />
+  <p class="hp" aria-hidden="true">
+    <label>Leave this field empty <input name="website-url" tabindex="-1" autocomplete="off" /></label>
+  </p>
+
+  <div class="form__alert" id="form-alert" role="alert" tabindex="-1" hidden></div>
+
+  <div class="form__row">
+    <div class="field">
+      <label for="f-name">Full name <span class="req" aria-hidden="true">*</span></label>
+      <input id="f-name" name="name" type="text" autocomplete="name" required maxlength="120" aria-describedby="e-name" />
+      <span class="field__error" id="e-name"></span>
+    </div>
+    <div class="field">
+      <label for="f-org">Organisation</label>
+      <input id="f-org" name="organisation" type="text" autocomplete="organization" maxlength="160" />
+    </div>
+  </div>
+
+  <div class="form__row">
+    <div class="field">
+      <label for="f-phone">Telephone <span class="req" aria-hidden="true">*</span></label>
+      <input
+        id="f-phone"
+        name="telephone"
+        type="tel"
+        inputmode="tel"
+        autocomplete="tel"
+        required
+        maxlength="30"
+        placeholder="+592 …"
+        aria-describedby="e-phone"
+      />
+      <span class="field__error" id="e-phone"></span>
+    </div>
+    <div class="field">
+      <label for="f-email">Email <span class="req" aria-hidden="true">*</span></label>
+      <input id="f-email" name="email" type="email" autocomplete="email" required maxlength="160" aria-describedby="e-email" />
+      <span class="field__error" id="e-email"></span>
+    </div>
+  </div>
+
+  <div class="form__row">
+    <div class="field">
+      <label for="f-type">Project type <span class="req" aria-hidden="true">*</span></label>
+      <select id="f-type" name="project-type" required aria-describedby="e-type">
+        <option value="">Select a service…</option>
+        {projectTypes.map((t) => <option value={t.value}>{t.label}</option>)}
+      </select>
+      <span class="field__error" id="e-type"></span>
+    </div>
+    <div class="field">
+      <label for="f-location">Project location <span class="req" aria-hidden="true">*</span></label>
+      <input
+        id="f-location"
+        name="project-location"
+        type="text"
+        required
+        maxlength="160"
+        placeholder="Village / town and region"
+        aria-describedby="e-location"
+      />
+      <span class="field__error" id="e-location"></span>
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="f-desc">Description of work <span class="req" aria-hidden="true">*</span></label>
+    <textarea
+      id="f-desc"
+      name="description"
+      required
+      minlength="20"
+      maxlength="5000"
+      aria-describedby="h-desc e-desc"></textarea>
+    <span class="hint" id="h-desc">What needs to be built, approximate size or quantities, and your timeline.</span>
+    <span class="field__error" id="e-desc"></span>
+  </div>
+
+  <div class="field">
+    <label for="f-file">Project documents <span class="hint">(optional)</span></label>
+    <input
+      id="f-file"
+      name="attachment"
+      type="file"
+      accept=".pdf,.doc,.docx,.xls,.xlsx,.dwg,.dxf,.jpg,.jpeg,.png,.zip"
+      aria-describedby="h-file e-file"
+    />
+    <span class="hint" id="h-file">Drawings, bill of quantities or tender documents. One file, up to 8 MB (PDF, Word, Excel, DWG, image or ZIP).</span>
+    <span class="field__error" id="e-file"></span>
+  </div>
+
+  <div class="form__foot">
+    <button class="btn btn--navy" type="submit" id="form-submit">
+      <span data-label>Send request</span>
+      <Icon name="arrow" />
+    </button>
+    <p>
+      We use these details only to respond to your enquiry. See our <a href="/privacy/">privacy notice</a>.
+    </p>
+  </div>
+</form>
+
+<script define:vars={{ email: company.email }}>
+  window.__contactEmail = email;
+</script>
+
+<script>
+  const form = document.getElementById('quote-form') as HTMLFormElement | null;
+  const alertBox = document.getElementById('form-alert');
+  const submit = document.getElementById('form-submit') as HTMLButtonElement | null;
+  const MAX_BYTES = 8 * 1024 * 1024;
+  const ALLOWED = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'dwg', 'dxf', 'jpg', 'jpeg', 'png', 'zip'];
+  const fallbackEmail = (window as unknown as { __contactEmail: string }).__contactEmail;
+
+  type Rule = (value: string, el: HTMLInputElement) => string;
+  const rules: Record<string, Rule> = {
+    name: (v) => (v.trim().length < 2 ? 'Please enter your name.' : ''),
+    telephone: (v) => (v.replace(/\D/g, '').length < 7 ? 'Please enter a telephone number we can reach you on.' : ''),
+    email: (v) => (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) ? '' : 'Please enter a valid email address.'),
+    'project-type': (v) => (v ? '' : 'Please select the type of project.'),
+    'project-location': (v) => (v.trim().length < 2 ? 'Please tell us where the project is.' : ''),
+    description: (v) => (v.trim().length < 20 ? 'Please describe the work in a little more detail (at least 20 characters).' : ''),
+    attachment: (_v, el) => {
+      const file = el.files?.[0];
+      if (!file) return '';
+      const ext = file.name.split('.').pop()?.toLowerCase() ?? '';
+      if (!ALLOWED.includes(ext)) return 'That file type is not accepted. Please attach a PDF, Word, Excel, DWG, image or ZIP file.';
+      if (file.size > MAX_BYTES) return 'That file is larger than 8 MB. Please send a smaller file or email it to us.';
+      return '';
+    },
+  };
+
+  function validateField(el: HTMLInputElement): boolean {
+    const rule = rules[el.name];
+    if (!rule) return true;
+    const message = rule(el.value, el);
+    const errorEl = el.closest('.field')?.querySelector('.field__error');
+    if (errorEl) errorEl.textContent = message;
+    message ? el.setAttribute('aria-invalid', 'true') : el.removeAttribute('aria-invalid');
+    return !message;
+  }
+
+  if (form && submit) {
+    const fields = [...form.elements].filter((el) => (el as HTMLInputElement).name in rules) as HTMLInputElement[];
+
+    // Pre-select the project type when arriving from a service page (?service=slug).
+    const preset = new URLSearchParams(window.location.search).get('service');
+    const typeSelect = form.elements.namedItem('project-type') as HTMLSelectElement | null;
+    if (preset && typeSelect && [...typeSelect.options].some((o) => o.value === preset)) typeSelect.value = preset;
+
+    fields.forEach((el) => {
+      el.addEventListener('blur', () => validateField(el));
+      el.addEventListener('input', () => el.hasAttribute('aria-invalid') && validateField(el));
+      el.addEventListener('change', () => validateField(el));
+    });
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (alertBox) alertBox.hidden = true;
+
+      const invalid = fields.filter((el) => !validateField(el));
+      if (invalid.length) {
+        invalid[0].focus();
+        return;
+      }
+
+      const label = submit.querySelector('[data-label]');
+      submit.disabled = true;
+      if (label) label.textContent = 'Sending…';
+
+      try {
+        const response = await fetch('/', { method: 'POST', body: new FormData(form) });
+        if (!response.ok) throw new Error(`Status ${response.status}`);
+        window.location.assign('/thank-you/');
+      } catch {
+        submit.disabled = false;
+        if (label) label.textContent = 'Send request';
+        if (alertBox) {
+          alertBox.innerHTML = `Sorry, your request could not be sent just now. Please try again, or email us at <a href="mailto:${fallbackEmail}">${fallbackEmail}</a>.`;
+          alertBox.hidden = false;
+          alertBox.focus();
+        }
+      }
+    });
+  }
+</script>

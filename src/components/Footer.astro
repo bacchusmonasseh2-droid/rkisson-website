@@ -1,0 +1,82 @@
+---
+import { company, nav } from '../data/company';
+import { services } from '../data/services';
+import Logo from './Logo.astro';
+
+const year = new Date().getFullYear();
+const socials = Object.entries(company.social).filter(([, url]) => url);
+---
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="site-footer__top">
+      <div>
+        <a class="brand" href="/" aria-label={`${company.name} — home`}>
+          <Logo />
+        </a>
+        <p class="site-footer__slogan">{company.slogan}.</p>
+        <p>Water infrastructure, civil works and building construction across Guyana’s coast and hinterland.</p>
+      </div>
+
+      <div>
+        <h2>Services</h2>
+        <ul>
+          {
+            services.map((s) => (
+              <li>
+                <a href={s.slug === 'equipment-rental' ? '/equipment-rental/' : `/services/${s.slug}/`}>{s.navTitle}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div>
+        <h2>Company</h2>
+        <ul>
+          {
+            nav.slice(1).map((item) => (
+              <li>
+                <a href={item.href}>{item.label}</a>
+              </li>
+            ))
+          }
+          <li><a href="/privacy/">Privacy</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h2>Contact</h2>
+        <address>
+          {company.address.line1}<br />
+          {company.address.line2}<br />
+          {company.address.region}, {company.address.country}
+        </address>
+        <ul>
+          {
+            company.phones.map((p) => (
+              <li>
+                <a href={`tel:${p.tel}`}>{p.display}</a>
+              </li>
+            ))
+          }
+          <li><a href={`mailto:${company.email}`}>{company.email}</a></li>
+          {
+            socials.map(([network, url]) => (
+              <li>
+                <a href={url} rel="noopener" style="text-transform: capitalize">
+                  {network}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div class="site-footer__bottom">
+      <span>© {year} {company.name}. All rights reserved.</span>
+      <span>Scene imagery is illustrative unless captioned as a project photograph.</span>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,79 @@
+---
+import { company, nav } from '../data/company';
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+const mainPhone = company.phones[0];
+---
+
+<div class="utility">
+  <div class="wrap">
+    <span class="utility__tag">Civil works · Water infrastructure · Building construction — Guyana</span>
+    <div class="utility__contacts">
+      <a href={`tel:${mainPhone.tel}`}>{mainPhone.display}</a>
+      <a class="utility__email" href={`mailto:${company.email}`}>{company.email}</a>
+    </div>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label={`${company.name} — home`}>
+      <Logo />
+    </a>
+
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+      <span class="nav-toggle__bars" aria-hidden="true"></span>
+      <span>Menu</span>
+    </button>
+
+    <nav class="nav" id="site-nav" aria-label="Main">
+      {
+        nav.map((item) => (
+          <a class="nav__link" href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+            {item.label}
+          </a>
+        ))
+      }
+      <a class="btn btn--primary nav__cta" href="/contact/#quote">
+        Request a quotation
+        <Icon name="arrow" />
+      </a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('.nav-toggle');
+  const menu = document.getElementById('site-nav');
+  const header = document.querySelector<HTMLElement>('.site-header');
+
+  if (toggle && menu && header) {
+    const close = () => {
+      toggle.setAttribute('aria-expanded', 'false');
+      menu.classList.remove('is-open');
+      document.body.style.overflow = '';
+    };
+
+    toggle.addEventListener('click', () => {
+      const open = toggle.getAttribute('aria-expanded') !== 'true';
+      if (!open) return close();
+      // Position the panel directly under the header wherever it currently sits.
+      menu.style.setProperty('--nav-top', `${header.getBoundingClientRect().bottom}px`);
+      toggle.setAttribute('aria-expanded', 'true');
+      menu.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+        close();
+        toggle.focus();
+      }
+    });
+
+    window.matchMedia('(min-width: 1081px)').addEventListener('change', close);
+  }
+</script>
